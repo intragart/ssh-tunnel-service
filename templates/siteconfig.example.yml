@@ -1,0 +1,29 @@
+---
+sitename:
+  active: True
+  fqdn: "example.com"
+  ssh-port: 22
+  user: test
+  password: muchsecret
+  identity-file: /home/test/.ssh/privkey
+  local-ports:
+    - "bind_address:localport:ip:remoteport"
+    - "bind_address:localport:ip:remoteport"
+  remote-ports:
+    - "bind_address:localport:ip:remoteport"
+  options:
+    - TCPKeepAlive: yes
+
+sitenamelab:
+  active: False
+  fqdn: "lab.example.com"
+  ssh-port: 22
+  user: test
+  identity-file: /home/test/.ssh/privkey
+  local-ports:
+    - "bind_address:localport:ip:remoteport"
+    - "bind_address:localport:ip:remoteport"
+  remote-ports:
+    - "bind_address:localport:ip:remoteport"
+  options:
+    - TCPKeepAlive: yes
