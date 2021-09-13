@@ -73,7 +73,7 @@ class KeepTunnelAlive(threading.Thread):
     def create_ssh_from_yml(self, yml_dict):
 
         # ssh to be run in background
-        shell_command = ['ssh', '-nNTf']
+        shell_command = ['ssh', '-nNT']
 
         # forward local ports
         if 'local-ports' in yml_dict:
