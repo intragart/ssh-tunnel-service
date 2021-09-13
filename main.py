@@ -24,11 +24,11 @@ def main():
         config = yaml.safe_load(file)
 
     # load site configuration
-    with open(config["siteconfig"], 'r') as file:
+    with open(config['siteconfig'], 'r') as file:
         sites = yaml.safe_load(file)
 
     # create log directory
-    os.makedirs(config["log-path"], exist_ok=True)
+    os.makedirs(config['log-path'], exist_ok=True)
 
     # empty array that holds all thread objects
     active_threads = []
@@ -38,7 +38,7 @@ def main():
         # create a thread for each site
         for siteconfig in sites.keys():
             if sites[siteconfig]['active'] == True:
-                active_threads.append(KeepTunnelAlive(f'{cwd}/{config["log-path"]}', sites[siteconfig]))
+                active_threads.append(KeepTunnelAlive(config['log-path'], sites[siteconfig]))
 
         # start threads
         for current_thread in active_threads:
