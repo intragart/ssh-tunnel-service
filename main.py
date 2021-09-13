@@ -17,7 +17,7 @@ def main():
     signal.signal(signal.SIGINT, service_stop)
 
     # get current working dir
-    cwd = os.getcwd()
+    cwd = os.path.dirname(__file__)
 
     # load configuration from config.yml
     with open(f'{cwd}/config.yml', 'r') as file:
