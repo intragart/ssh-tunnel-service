@@ -39,8 +39,7 @@ class KeepTunnelAlive(threading.Thread):
 
                 # no subprocess yet or subprocess has died
                 # start new subprocess for tunnel
-                proc = subprocess.Popen(self.shell_command, stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE, universal_newlines=True, bufsize=1)
+                proc = subprocess.Popen(self.shell_command)
 
                 # wait for the process to start
                 time.sleep(3)
