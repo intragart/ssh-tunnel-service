@@ -24,11 +24,11 @@ def main():
         config = yaml.safe_load(file)
 
     # load site configuration
-    with open(f'{cwd}/{config["siteconfig"]}', 'r') as file:
+    with open(config["siteconfig"], 'r') as file:
         sites = yaml.safe_load(file)
 
     # create log directory
-    os.makedirs(f'{cwd}/{config["log-path"]}', exist_ok=True)
+    os.makedirs(config["log-path"], exist_ok=True)
 
     # empty array that holds all thread objects
     active_threads = []

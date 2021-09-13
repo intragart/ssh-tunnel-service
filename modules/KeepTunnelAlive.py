@@ -15,7 +15,7 @@ class KeepTunnelAlive(threading.Thread):
         self.stop_flag = threading.Event()
 
         # set log_file for this thread
-        self.log_file = log_path + config_obj['fqdn'] + '.log'
+        self.log_file = log_path + '/' + config_obj['fqdn'] + '.log'
 
         # parse yml dictionary to shell command
         self.shell_command = self.create_ssh_from_yml(config_obj)
