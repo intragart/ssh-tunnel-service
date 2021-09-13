@@ -34,7 +34,7 @@ def main():
 
         # create a thread for each site
         for siteconfig in sites.keys():
-            if bool(sites[siteconfig]['active']) == True:
+            if sites[siteconfig]['active'] == True:
                 active_threads.append(KeepTunnelAlive(config['log-path'], sites[siteconfig]))
 
         # start threads
