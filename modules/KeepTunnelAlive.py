@@ -19,7 +19,6 @@ class KeepTunnelAlive(threading.Thread):
 
         # parse yml dictionary to shell command
         self.shell_command = self.create_ssh_from_yml(config_obj)
-        self.shell_command = ['sleep', '10']
 
         # create own loging object for thread
         self.LogP = LogP(self.log_file, True)
@@ -58,11 +57,11 @@ class KeepTunnelAlive(threading.Thread):
                 # check if subprocess has terminated
                 if proc.poll() is not None:
                     # subprocess ist not running, try to restart
-                        self.LogP.log(f'Subprocess with PID #{tunnel_pid} died', 2)
+                        self.LogP.log(f'Subprocess with PID #{tunnel_pid} died, Returncode {proc.poll()}', 2)
                         tunnel_pid = 0
 
             # ... Job code here ...
-            print('running ...')
+            # print('running ...') # debug message
             time.sleep(1)
  
         # terminate ssh tunnel
