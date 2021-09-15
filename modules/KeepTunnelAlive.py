@@ -35,11 +35,17 @@ class KeepTunnelAlive(threading.Thread):
  
         while not self.stop_flag.is_set():
 
+            # set standard sleep time
+            sleep_time = 1
+
             if tunnel_pid == 0:
+
+                self.LogP.log('Starting Subprocess ...')
 
                 # no subprocess yet or subprocess has died
                 # start new subprocess for tunnel
-                proc = subprocess.Popen(self.shell_command)
+                proc = subprocess.Popen(self.shell_command, stdout=subprocess.PIPE, 
+                stderr=subprocess.STDOUT, universal_newlines=True)
 
                 # wait for the process to start
                 time.sleep(3)
@@ -52,16 +58,23 @@ class KeepTunnelAlive(threading.Thread):
 
             else:
 
+                # get stdout, stderr from subprocess
+                proc_output = proc.stdout.readline()
+
+                # check for new output
+                if proc_output != '':
+                    self.LogP.log(proc_output.strip(), 4)
+                    sleep_time = 0
+
                 # subprocess should be running
                 # check if subprocess has terminated
-                if proc.poll() is not None:
+                elif proc.poll() is not None:
                     # subprocess ist not running, try to restart
-                        self.LogP.log(f'Subprocess with PID #{tunnel_pid} died, Returncode {proc.poll()}', 2)
-                        tunnel_pid = 0
+                    self.LogP.log(f'Subprocess with PID #{tunnel_pid} died, Returncode {proc.poll()}', 2)
+                    tunnel_pid = 0
 
-            # ... Job code here ...
             # print('running ...') # debug message
-            time.sleep(1)
+            time.sleep(sleep_time)
  
         # terminate ssh tunnel
         if proc is not None:
