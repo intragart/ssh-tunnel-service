@@ -28,6 +28,7 @@ class KeepTunnelAlive(threading.Thread):
         self.LogP.log(f'Thread #{self.ident} started')
 
         tunnel_pid = 0
+        tunnel_reset = False
         proc = None
 
         # create command string for log file
@@ -56,15 +57,40 @@ class KeepTunnelAlive(threading.Thread):
                 # log pid
                 self.LogP.log(f'Started Subprocess with PID #{tunnel_pid}')
 
+            # indicator for reseting the tunnel has been set
+            # try to terminate the subprocess and wait for 15 seconds
+            elif tunnel_reset == True:
+                tunnel_reset = False
+                self.LogP.log('Subprocess needs to be restarted', 1)
+                try:
+                    self.LogP.log(f'Terminating Subprocess with PID #{proc.pid}')
+                    proc.terminate()
+                except Exception as e:
+                    self.LogP.log(f'Exception: {e}', 1)
+                tunnel_pid = 0
+                self.LogP.log('Waiting 15 seconds before restarting the Subprocess')
+                sleep_time = 15
+
+            # normal operation, continue checking for problems
             else:
 
                 # get stdout, stderr from subprocess
-                proc_output = proc.stdout.readline()
+                proc_output = proc.stdout.readline().strip()
 
                 # check for new output
                 if proc_output != '':
-                    self.LogP.log(proc_output.strip(), 4)
+                    self.LogP.log(proc_output, 4)
                     sleep_time = 0
+
+                    # check if output indicates that the tunnel needs to be reseted
+                    # if there is the need to reset the tunnel mark it via tunnel_reset = True
+                    # in the next iteration where no new output was found an error message will
+                    # be shown and the subprocess will be reseted
+                    reset_reasons = ['remote port forwarding failed',
+                                     'client_loop: send disconnect: Broken pipe']
+                    for reset_reason in reset_reasons:
+                        if reset_reason in proc_output:
+                            tunnel_reset = True
 
                 # subprocess should be running
                 # check if subprocess has terminated
