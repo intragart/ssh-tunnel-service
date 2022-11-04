@@ -1,0 +1,13 @@
+[Unit]
+Description=ssh-tunnel-service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /path/to/ssh-tunnel-service/main.py
+User=test
+Restart=always
+RestartSec=1
+
+[Install]
+WantedBy=multi-user.target
