@@ -38,7 +38,7 @@ class LogProcess():
             with open(self.filename, mode='a', encoding='utf-8') as f:
 
                 # write the log entry to the file
-                f.write(timestamp + ' ' + log_entry + '\r\n')
+                f.write(timestamp + ' ' + log_entry + '\n')
 
             # print the log entry to the screen
             if self.print_to_shell:
