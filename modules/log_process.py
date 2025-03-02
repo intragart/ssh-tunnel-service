@@ -19,6 +19,7 @@ class LogProcess():
         self.filename = filename
         self.print_to_shell = print_to_shell
 
+
     def __compute_log(self, timestamp, log_entry):
         """Appends the log-entry to the file specified for this class and prints it to the screen if
         self.print_to_shell is true. If an error occurs during file-operation an error is printed to
@@ -51,6 +52,7 @@ class LogProcess():
             # something went wrong during file-operation
             print(f'{timestamp} [FATAL LOG ERROR] {e}')
             return 1
+
 
     def log_command(self, command):
         """This Function executes a Unix command, logs the output and returns the returncode of the
@@ -95,6 +97,7 @@ class LogProcess():
             self.log(str(e), 4)
 
             return 1
+
 
     def log(self, msg, log_type = 0):
         """Log the given message. Types that can be used are:

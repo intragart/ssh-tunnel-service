@@ -36,6 +36,7 @@ class KeepTunnelAlive(threading.Thread):
         # create own loging object for thread
         self.log_process = LogProcess(self.log_file, True)
 
+
     def run(self):
         """This code is being executed within the given thread. As long as there's no stop flag
         being set the execution continues. The code starts the ssh tunnel by executing the command
@@ -126,6 +127,7 @@ class KeepTunnelAlive(threading.Thread):
             proc.terminate()
 
         self.log_process.log(f'Thread #{self.ident} stopped')
+
 
     def create_ssh_from_yml(self, yml_dict):
         """This function creates a ssh-command and returns it.

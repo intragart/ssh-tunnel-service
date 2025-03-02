@@ -15,7 +15,6 @@ from modules.keep_tunnel_alive import KeepTunnelAlive
 from modules.log_process import LogProcess
 from modules.service_stopping import ServiceStopping
 
-
 def service_stop(signum, frame):
     """This function is being called when the program is being terminated. For example when the user
     presses Ctrl+C. To terminate all threads within the process a custom exception is being called.
@@ -49,7 +48,7 @@ def main():
     config_file = f'{cwd}/config/config.yml'
     os.makedirs(os.path.dirname(config_file), exist_ok=True)
     if not os.path.isfile(config_file):
-        shutil.copy2('templates/config.example.yml',config_file) 
+        shutil.copy2('templates/config.example.yml',config_file)
     with open(f'{cwd}/config/config.yml', 'r', encoding='utf-8') as file:
         config = yaml.safe_load(file)
 
