@@ -20,7 +20,7 @@ def main():
     cwd = os.path.dirname(__file__)
 
     # load configuration from config.yml
-    with open(f'{cwd}/config.yml', 'r') as file:
+    with open(f'{cwd}/config/config.yml', 'r') as file:
         config = yaml.safe_load(file)
 
     # load site configuration
