@@ -5,12 +5,16 @@ Raises:
     threads.
 """
 import os
+import sys
 import time
+import shutil
 import signal
 import yaml
 
 from modules.keep_tunnel_alive import KeepTunnelAlive
+from modules.log_process import LogProcess
 from modules.service_stopping import ServiceStopping
+
 
 def service_stop(signum, frame):
     """This function is being called when the program is being terminated. For example when the user
@@ -40,16 +44,25 @@ def main():
     # get current working dir
     cwd = os.path.dirname(__file__)
 
-    # load configuration from config.yml
+    # check if config/config.yml exists. If not copy template to config location. load configuration
+    # from config/config.yml
+    config_file = f'{cwd}/config/config.yml'
+    os.makedirs(os.path.dirname(config_file), exist_ok=True)
+    if not os.path.isfile(config_file):
+        shutil.copy2('templates/config.example.yml',config_file) 
     with open(f'{cwd}/config/config.yml', 'r', encoding='utf-8') as file:
         config = yaml.safe_load(file)
 
+    # create log directory and log object
+    os.makedirs(config['log-path'], exist_ok=True)
+    log_process = LogProcess(f'{config["log-path"]}/main.log', True)
+
     # load site configuration
+    if not os.path.isfile(config['siteconfig']):
+        log_process.log(f'Missing file "{config["siteconfig"]}"', 1)
+        sys.exit(1)
     with open(config['siteconfig'], 'r', encoding='utf-8') as file:
         sites = yaml.safe_load(file)
-
-    # create log directory
-    os.makedirs(config['log-path'], exist_ok=True)
 
     # empty array that holds all thread objects
     active_threads = []
@@ -79,7 +92,7 @@ def main():
         for current_thread in active_threads:
             current_thread.join()
 
-    print('Service stopped.')
+    log_process.log('Service stopped.')
 
 
 # start main program
