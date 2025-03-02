@@ -1,6 +1,5 @@
 # custom configurations
-config.yml
-siteconfig.yml
+config/
 log/
 
 # Byte-compiled / optimized / DLL files
