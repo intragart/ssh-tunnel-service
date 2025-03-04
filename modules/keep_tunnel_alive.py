@@ -187,6 +187,19 @@ class KeepTunnelAlive(threading.Thread):
             shell_command.append('-o')
             shell_command.append(f'UserKnownHostsFile={self.add_hostkey(yml_dict)}')
 
+        # add options
+        print(yml_dict)
+        if 'options' in yml_dict:
+            for opt_dict in yml_dict['options']:
+                for opt_key, opt_val in opt_dict.items():
+                    opt_val_checked = opt_val
+                    if opt_val is True:
+                        opt_val_checked = 'yes'
+                    if opt_val is False:
+                        opt_val_checked = 'no'
+                    shell_command.append('-o')
+                    shell_command.append(f'{opt_key}={opt_val_checked}')
+
         # add user@fqdn
         shell_command.append(yml_dict['user'] + '@' + yml_dict['fqdn'])
 

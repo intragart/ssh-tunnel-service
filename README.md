@@ -130,5 +130,3 @@ simply be mounted as well:
 ## Open ToDos
 
 TODO: Readme - Run Container using environment variables
-
-TODO: custom ssh options
