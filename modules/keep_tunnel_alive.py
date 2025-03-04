@@ -167,7 +167,7 @@ class KeepTunnelAlive(threading.Thread):
 
         # hostkey verification
         if 'hostkey' in yml_dict:
-            shell_command.append('-o ')
+            shell_command.append('-o')
             shell_command.append(f'UserKnownHostsFile={self.add_hostkey(yml_dict)}')
 
         # add user@fqdn
