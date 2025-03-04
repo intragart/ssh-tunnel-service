@@ -73,6 +73,15 @@ def main():
             if sites[siteconfig]['active']:
                 sites[siteconfig]['sitename'] = siteconfig
                 sites[siteconfig]['cwd'] = cwd
+                # check if either identity-file or password has been defined for this site.
+                if 'password' in sites[siteconfig] and 'identity-file' in sites[siteconfig]:
+                    log_process.log('Can\'t have both, password and identity-file for site '+ \
+                                    f'\'{siteconfig}\'. Skipping this site.', 1)
+                    continue
+                if 'password' not in sites[siteconfig] and 'identity-file' not in sites[siteconfig]:
+                    log_process.log('Password or identity-file has to be set for site '+ \
+                                    f'\'{siteconfig}\'. Skipping this site.', 1)
+                    continue
                 active_threads.append(KeepTunnelAlive(config['log-path'], sites[siteconfig]))
 
         # start threads

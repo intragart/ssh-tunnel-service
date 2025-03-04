@@ -53,7 +53,9 @@ of the remote system. If host key verification shall not be executed add
 
 `ssh-port`: Optional. Port to be used within the ssh-command.
 
-`password`: Optional. *Not yet implemented.* **If key is not set key `identity-file` is mandatory.**
+`password`: Optional, not recommended. Password to be used for user authentication at the remote
+host. The programm `sshpass` needs to be installed on the local system.
+**If key is not set key `identity-file` is mandatory.**
 
 `identity-file`: Optional. Absolute path to the ssh-keyfile to be used for remote side. The
 keyfile musn't have a password. **If key is not set key `password` is mandatory.**
@@ -130,7 +132,5 @@ simply be mounted as well:
 TODO: Exit when no active hosts
 
 TODO: Readme - Run Container using environment variables
-
-TODO: Login via password only
 
 TODO: custom ssh options

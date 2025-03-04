@@ -3,7 +3,7 @@ FROM python:3.9-slim
 WORKDIR /app
 
 RUN apt-get update
-RUN apt-get install -y openssh-client git
+RUN apt-get install -y openssh-client git sshpass
 RUN rm -rf /var/lib/apt/lists/*
 RUN git clone https://github.com/intragart/ssh-tunnel-service .
 # TODO: Remove git checkout dev

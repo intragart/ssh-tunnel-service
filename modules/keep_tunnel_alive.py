@@ -141,7 +141,17 @@ class KeepTunnelAlive(threading.Thread):
             str: ssh-command
         """
         # ssh to be run in background
-        shell_command = ['ssh', '-nNT']
+        shell_command = []
+
+        # use provided program sshpass to use provided password
+        if 'password' in yml_dict:
+            shell_command.append('sshpass')
+            shell_command.append('-p')
+            shell_command.append(f'"{yml_dict["password"]}"')
+
+        # start of ssh command
+        shell_command.append('ssh')
+        shell_command.append('-nNT')
 
         # forward local ports
         if 'local-ports' in yml_dict:
