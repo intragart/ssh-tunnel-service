@@ -13,14 +13,16 @@ class KeepTunnelAlive(threading.Thread):
     Once the tread is started it constantly checks if the tunnel itself is still alive and
     reconnects if neccessary.
     """
-    def __init__(self, log_path, config_obj):
+    def __init__(self, log_path, sitename, config_obj):
         """Initializes the thread for a given ssh site.
 
         Args:
             log_path (str): path and filename to be used for thread output.
+            sitename (str): name of the site defined in siteconfig.yml
             config_obj (dict): Dictionary that contains all settings for the ssh-command of the
             current thread
         """
+        self.sitename = sitename
         threading.Thread.__init__(self)
 
         # threading.Event object that indicates whether the
@@ -28,10 +30,10 @@ class KeepTunnelAlive(threading.Thread):
         self.stop_flag = threading.Event()
 
         # set log_file for this thread
-        self.log_file = log_path + '/' + config_obj['fqdn'] + '.log'
+        self.log_file = log_path + '/' + sitename + '.log'
 
         # parse yml dictionary to shell command
-        self.shell_command = self.create_ssh_from_yml(config_obj)
+        self.shell_command = self.create_ssh_from_yml(sitename, config_obj)
 
         # create own loging object for thread
         self.log_process = LogProcess(self.log_file, True)
@@ -129,10 +131,11 @@ class KeepTunnelAlive(threading.Thread):
         self.log_process.log(f'Thread #{self.ident} stopped')
 
 
-    def create_ssh_from_yml(self, yml_dict):
+    def create_ssh_from_yml(self, sitename, yml_dict):
         """This function creates a ssh-command and returns it.
 
         Args:
+            sitename (str): name of the site defined in siteconfig.yml
             yml_dict (dict): Dictionary for one site created from siteconfig.yml that contains all
             settings for the ssh-command.
 
