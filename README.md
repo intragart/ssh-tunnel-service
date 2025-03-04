@@ -47,7 +47,9 @@ in use can be turned off using this setting. Possible values are `True` or `Fals
 
 `user`: Mandatory. Username to be used at the remote site.
 
-`hostkey`: Mandatory. Hostkey of remote host. This key is needed to verify the identity of the remote system.
+`hostkey`: Optional. `known_hosts` entry of remote host. This key is needed to verify the identity
+of the remote system. If host key verification shall not be executed add
+`UserKnownHostsFile: /dev/null` and `StrictHostKeyChecking: no` to options list of yml file.
 
 `ssh-port`: Optional. Port to be used within the ssh-command.
 
@@ -59,10 +61,10 @@ keyfile musn't have a password. **If key is not set key `password` is mandatory.
 `local-ports`: Optional. List of local sockets to be forwarded with the tunnel. Format is
 `bind_address:localport:ip:remoteport`.
 
-**remote-ports**: Optional. List of remote sockets to be forwarded with the tunnel. Format is
+`remote-ports`: Optional. List of remote sockets to be forwarded with the tunnel. Format is
 `bind_address:localport:ip:remoteport`.
 
-**options**: Optional. *WIP*. List of ssh-command options.
+`options`: Optional. *WIP*. List of ssh-command options.
 
 ## Adding a Service to Linux
 
@@ -97,19 +99,26 @@ To start install the service and to enable it on startup execute these two lines
 
 ### Build an image
 
-To use this program inside a docker container an image file needs to be build first. Currently there's no image available on docker hub. Use this command to create a docker image:
+To use this program inside a docker container an image file needs to be build first. Currently
+there's no image available on docker hub. Use this command to create a docker image:
 
     docker build -t ssh-tunnel-service .
 
 ### Run Container via siteconfig.yml
 
-The Container needs a `siteconfig.yml` to run. This file can simply be mounted using `-v`. Therefore, a run command could look like this:
+The Container needs a `siteconfig.yml` to run. Since the docker container doesn't know any remote
+hosts key `hostkey` should be set accordingly. A not recommended alternative to `hostkey` is
+disabling host key verification with options `UserKnownHostsFile: /dev/null` and
+`StrictHostKeyChecking: no`. `siteconfig.yml` can simply be mounted using `-v`. Therefore, a run
+command could look like this:
 
     docker run -dt \
     -v /local/path/to/siteconfig.yml:/app/config/siteconfig.yml:ro \
     ssh-tunnel-service
 
-If you're using an identity-file for authentification there's the directory `/app/.ssh` that can be used. The correct location must be referenced in `siteconfig.yml`. One or more identity-file(s) can simply be mounted as well:
+If you're using an identity-file for authentification there's the directory `/app/.ssh` that can be
+used. The correct location must be referenced in `siteconfig.yml`. One or more identity-file(s) can
+simply be mounted as well:
 
     docker run -dt \
     -v /local/path/to/siteconfig.yml:/app/config/siteconfig.yml:ro \
@@ -118,12 +127,10 @@ If you're using an identity-file for authentification there's the directory `/ap
 
 ## Open ToDos
 
-TODO: Host key verification failed
-
 TODO: Exit when no active hosts
 
 TODO: Readme - Run Container using environment variables
 
-TODO: Implement hostkey in `siteconfig.yml` (code, template, docker readme)
+TODO: Login via password only
 
-TODO: How do i get hostkey?
+TODO: custom ssh options

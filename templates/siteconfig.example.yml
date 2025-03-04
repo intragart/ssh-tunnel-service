@@ -6,6 +6,7 @@ sitename:
   user: test
   password: muchsecret
   identity-file: /home/test/.ssh/privkey
+  hostkey: "ssh-ed25519 AAAAC123456"
   local-ports:
     - "bind_address:localport:ip:remoteport"
     - "bind_address:localport:ip:remoteport"
@@ -20,6 +21,7 @@ sitenamelab:
   ssh-port: 22
   user: test
   identity-file: /home/test/.ssh/privkey
+  hostkey: "ssh-ed25519 AAAAC654321"
   local-ports:
     - "bind_address:localport:ip:remoteport"
     - "bind_address:localport:ip:remoteport"

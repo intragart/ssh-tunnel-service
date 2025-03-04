@@ -1,5 +1,6 @@
 """A threading class to maintain an active connection to a network tunnel.
 """
+import os
 import time
 import threading
 import subprocess
@@ -13,16 +14,14 @@ class KeepTunnelAlive(threading.Thread):
     Once the tread is started it constantly checks if the tunnel itself is still alive and
     reconnects if neccessary.
     """
-    def __init__(self, log_path, sitename, config_obj):
+    def __init__(self, log_path, config_obj):
         """Initializes the thread for a given ssh site.
 
         Args:
             log_path (str): path and filename to be used for thread output.
-            sitename (str): name of the site defined in siteconfig.yml
             config_obj (dict): Dictionary that contains all settings for the ssh-command of the
             current thread
         """
-        self.sitename = sitename
         threading.Thread.__init__(self)
 
         # threading.Event object that indicates whether the
@@ -30,10 +29,10 @@ class KeepTunnelAlive(threading.Thread):
         self.stop_flag = threading.Event()
 
         # set log_file for this thread
-        self.log_file = log_path + '/' + sitename + '.log'
+        self.log_file = log_path + '/' + config_obj['sitename'] + '.log'
 
         # parse yml dictionary to shell command
-        self.shell_command = self.create_ssh_from_yml(sitename, config_obj)
+        self.shell_command = self.create_ssh_from_yml(config_obj)
 
         # create own loging object for thread
         self.log_process = LogProcess(self.log_file, True)
@@ -131,11 +130,10 @@ class KeepTunnelAlive(threading.Thread):
         self.log_process.log(f'Thread #{self.ident} stopped')
 
 
-    def create_ssh_from_yml(self, sitename, yml_dict):
+    def create_ssh_from_yml(self, yml_dict):
         """This function creates a ssh-command and returns it.
 
         Args:
-            sitename (str): name of the site defined in siteconfig.yml
             yml_dict (dict): Dictionary for one site created from siteconfig.yml that contains all
             settings for the ssh-command.
 
@@ -167,7 +165,36 @@ class KeepTunnelAlive(threading.Thread):
             shell_command.append('-i')
             shell_command.append(yml_dict['identity-file'])
 
+        # hostkey verification
+        if 'hostkey' in yml_dict:
+            shell_command.append('-o ')
+            shell_command.append(f'UserKnownHostsFile={self.add_hostkey(yml_dict)}')
+
         # add user@fqdn
         shell_command.append(yml_dict['user'] + '@' + yml_dict['fqdn'])
 
         return shell_command
+
+    def add_hostkey(self, yml_dict):
+        """This function creates a known_hosts file for the given configuration inside the script
+        directory and returns the complete path of this file.
+
+        Args:
+            yml_dict (dict): Dictionary for one site created from siteconfig.yml that contains all
+            settings for the ssh-command.
+
+        Returns:
+            srt: full path to known_hosts file
+        """
+        # create a .ssh folder in current working directory
+        ssh_folder = os.path.join(yml_dict['cwd'], '.ssh')
+        if not os.path.exists(ssh_folder):
+            os.makedirs(ssh_folder)
+
+        # create the known_hosts file for this specific site
+        known_hosts = os.path.join(ssh_folder, yml_dict['sitename'])
+        file_content = f'{yml_dict['fqdn']} {yml_dict['hostkey']}'
+        with open(known_hosts, 'w', encoding='utf-8') as kh_file:
+            kh_file.write(file_content)
+
+        return known_hosts
