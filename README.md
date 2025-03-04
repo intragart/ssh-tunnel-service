@@ -6,6 +6,13 @@ reason.
 
 **Please note that the fingerprint of the remote site has to be known in the local system.**
 
+Contents of README.md:
+
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Adding a Service to Linux](#adding-a-service-to-linux)
+- [Docker Container](#docker-container)
+
 ## Installation
 
 To use this program on your local machine Python needs to be installed. All neccessary non-standard
@@ -40,6 +47,8 @@ in use can be turned off using this setting. Possible values are `True` or `Fals
 
 `user`: Mandatory. Username to be used at the remote site.
 
+`hostkey`: Mandatory. Hostkey of remote host. This key is needed to verify the identity of the remote system.
+
 `ssh-port`: Optional. Port to be used within the ssh-command.
 
 `password`: Optional. *Not yet implemented.* **If key is not set key `identity-file` is mandatory.**
@@ -61,21 +70,19 @@ The program can be added as a service within linux. To do so the file `ssh-tunne
 can be created with the contents shown below. Please change the path for `ExecStart` to match your
 system.
 
-```
-[Unit]
-Description=ssh-tunnel-service
-After=network.target
-
-[Service]
-Type=simple
-ExecStart=/usr/bin/python3 /path/to/ssh-tunnel-service/main.py
-User=test
-Restart=always
-RestartSec=1
-
-[Install]
-WantedBy=multi-user.target
-```
+    [Unit]
+    Description=ssh-tunnel-service
+    After=network.target
+    
+    [Service]
+    Type=simple
+    ExecStart=/usr/bin/python3 /path/to/ssh-tunnel-service/main.py
+    User=test
+    Restart=always
+    RestartSec=1
+    
+    [Install]
+    WantedBy=multi-user.target
 
 Once the file has been created it can be copied to the correct location:
 
@@ -85,3 +92,38 @@ To start install the service and to enable it on startup execute these two lines
 
     systemctl start ssh-tunnel-service.service
     systemctl enable ssh-tunnel-service.service
+
+## Docker Container
+
+### Build an image
+
+To use this program inside a docker container an image file needs to be build first. Currently there's no image available on docker hub. Use this command to create a docker image:
+
+    docker build -t ssh-tunnel-service .
+
+### Run Container via siteconfig.yml
+
+The Container needs a `siteconfig.yml` to run. This file can simply be mounted using `-v`. Therefore, a run command could look like this:
+
+    docker run -dt \
+    -v /local/path/to/siteconfig.yml:/app/config/siteconfig.yml:ro \
+    ssh-tunnel-service
+
+If you're using an identity-file for authentification there's the directory `/app/.ssh` that can be used. The correct location must be referenced in `siteconfig.yml`. One or more identity-file(s) can simply be mounted as well:
+
+    docker run -dt \
+    -v /local/path/to/siteconfig.yml:/app/config/siteconfig.yml:ro \
+    -v /local/path/to/identity-file:/app/.ssh/identity-file:ro \
+    ssh-tunnel-service
+
+## Open ToDos
+
+TODO: Host key verification failed
+
+TODO: Exit when no active hosts
+
+TODO: Readme - Run Container using environment variables
+
+TODO: Implement hostkey in `siteconfig.yml` (code, template, docker readme)
+
+TODO: How do i get hostkey?
