@@ -89,8 +89,11 @@ def main():
             current_thread.start()
 
         # keep the main thread running
-        while True:
-            time.sleep(1)
+        if len(active_threads) > 0:
+            while True:
+                time.sleep(1)
+        else:
+            log_process.log('No active/working site configuration found. Exiting ...', 2)
 
     except ServiceStopping:
         # Terminate the running threads.

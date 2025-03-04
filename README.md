@@ -129,8 +129,6 @@ simply be mounted as well:
 
 ## Open ToDos
 
-TODO: Exit when no active hosts
-
 TODO: Readme - Run Container using environment variables
 
 TODO: custom ssh options
