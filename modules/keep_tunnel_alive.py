@@ -1,6 +1,7 @@
 """A threading class to maintain an active connection to a network tunnel.
 """
 import os
+import re
 import time
 import threading
 import subprocess
@@ -51,7 +52,9 @@ class KeepTunnelAlive(threading.Thread):
         proc = None
 
         # create command string for log file
-        self.log_process.log(f'Using command: {" ".join(self.shell_command)}')
+        shell_command_str = re.sub(r'(sshpass -p ).*?( ssh)', r'\1****\2', \
+                " ".join(self.shell_command))
+        self.log_process.log(f'Using command: {shell_command_str}')
 
         while not self.stop_flag.is_set():
 
