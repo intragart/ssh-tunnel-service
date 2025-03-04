@@ -38,6 +38,9 @@ class KeepTunnelAlive(threading.Thread):
         # create own loging object for thread
         self.log_process = LogProcess(self.log_file, True)
 
+        # remember sitename
+        self.sitename = config_obj['sitename']
+
 
     def run(self):
         """This code is being executed within the given thread. As long as there's no stop flag
@@ -63,7 +66,7 @@ class KeepTunnelAlive(threading.Thread):
 
             if tunnel_pid == 0:
 
-                self.log_process.log('Starting Subprocess ...')
+                self.log_process.log(f'Starting Subprocess for site \'{self.sitename}\' ...')
 
                 # no subprocess yet or subprocess has died
                 # start new subprocess for tunnel
@@ -77,7 +80,7 @@ class KeepTunnelAlive(threading.Thread):
                 tunnel_pid = proc.pid
 
                 # log pid
-                self.log_process.log(f'Started Subprocess with PID #{tunnel_pid}')
+                self.log_process.log(f'Started PID #{tunnel_pid} for site \'{self.sitename}\'')
 
             # indicator for reseting the tunnel has been set
             # try to terminate the subprocess and wait for 15 seconds
