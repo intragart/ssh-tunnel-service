@@ -205,6 +205,7 @@ class KeepTunnelAlive(threading.Thread):
 
         return shell_command
 
+
     def add_hostkey(self, yml_dict):
         """This function creates a known_hosts file for the given configuration inside the script
         directory and returns the complete path of this file.
