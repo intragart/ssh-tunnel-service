@@ -147,7 +147,7 @@ class KeepTunnelAlive(threading.Thread):
         if 'password' in yml_dict:
             shell_command.append('sshpass')
             shell_command.append('-p')
-            shell_command.append(f'"{yml_dict["password"]}"')
+            shell_command.append(f'{yml_dict["password"]}')
 
         # start of ssh command
         shell_command.append('ssh')
