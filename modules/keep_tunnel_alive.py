@@ -160,10 +160,11 @@ class KeepTunnelAlive(threading.Thread):
             shell_command.append('-p')
             shell_command.append(str(yml_dict['ssh-port']))
 
-        # use identity file
+        # use identity file (also fix permissions)
         if 'identity-file' in yml_dict:
             shell_command.append('-i')
             shell_command.append(yml_dict['identity-file'])
+            os.chmod(yml_dict['identity-file'], 0o600)
 
         # hostkey verification
         if 'hostkey' in yml_dict:
