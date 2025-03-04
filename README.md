@@ -127,6 +127,53 @@ simply be mounted as well:
     -v /local/path/to/identity-file:/app/.ssh/identity-file:ro \
     ssh-tunnel-service
 
-## Open ToDos
+### Run Container using environment variables
 
-TODO: Readme - Run Container using environment variables
+The `siteconfig.yml` can be replaced by environment variables when using a docker container. When
+environment variables are being used the `siteconfig.yml` inside the docker container is being
+rebuild using the values from the environment variables. The names for the variables are almost the
+same as described in [config/siteconfig.yml](#configsiteconfigyml). The only differences are:
+
+- environment variables are capslocked and `-` becomes `_`. For example `identity-file` becomes
+`IDENTITY_FILE`
+- lists are comma seperated values with no spaces between keys and values. For example
+`OPTIONS=TCPKeepAlive:yes,GatewayPorts:no`
+- For `OPTIONS` character `:` seperates key and value
+
+**Please note that this option only supports one site.**
+
+A command using environment variables could look like this:
+
+    docker run -dt \
+    -v /local/path/to/identity-file:/app/.ssh/identity-file:ro \
+    -e FQDN=example.com \
+    -e SSH_PORT=22 \
+    -e USER=test \
+    -e IDENTITY_FILE=/app/.ssh/identity-file \
+    -e HOSTKEY="ssh-ed25519 AAAAC123456" \
+    -e LOCAL_PORTS=bind_address:localport:ip:remoteport,bind_address:localport:ip:remoteport \
+    -e REMOTE_PORTS=bind_address:localport:ip:remoteport \
+    -e OPTIONS=TCPKeepAlive:yes \
+    ssh-tunnel-service
+
+### Docker Compose
+
+A working docker compose file using environment variables could look like this:
+
+    ---
+    services:
+      ssh-tunnel-service:
+        container_name: ssh-tunnel-service
+        image: ssh-tunnel-service
+        restart: unless-stopped
+        volumes:
+          - /local/path/to/identity-file:/app/.ssh/identity-file:ro
+        environment:
+          - FQDN=example.com
+          - SSH_PORT=22
+          - USER=test
+          - IDENTITY_FILE=/app/.ssh/identity-file
+          - HOSTKEY="ssh-ed25519 AAAAC123456"
+          - LOCAL_PORTS=bind_address:localport:ip:remoteport,bind_address:localport:ip:remoteport
+          - REMOTE_PORTS=bind_address:localport:ip:remoteport
+          - OPTIONS=TCPKeepAlive:yes

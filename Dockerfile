@@ -1,5 +1,7 @@
 FROM python:3.9-slim
 
+ENV DOCKER_CONTAINER=True
+
 WORKDIR /app
 
 RUN apt-get update
