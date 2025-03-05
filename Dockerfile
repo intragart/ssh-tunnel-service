@@ -1,4 +1,4 @@
-FROM python:3.9-slim
+FROM python:3.13-slim
 
 # set up app environment
 LABEL version="0.1.0"
