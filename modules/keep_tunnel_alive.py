@@ -223,7 +223,7 @@ class KeepTunnelAlive(threading.Thread):
             os.makedirs(ssh_folder)
 
         # create the known_hosts file for this specific site
-        known_hosts = os.path.join(ssh_folder, f'known_hosts_{yml_dict['sitename']}')
+        known_hosts = os.path.join(ssh_folder, f'known_hosts_{yml_dict["sitename"]}')
         file_content = f'{yml_dict["fqdn"]} {yml_dict["hostkey"]}'
         with open(known_hosts, 'w', encoding='utf-8') as kh_file:
             kh_file.write(file_content)
