@@ -188,7 +188,6 @@ class KeepTunnelAlive(threading.Thread):
             shell_command.append(f'UserKnownHostsFile={self.add_hostkey(yml_dict)}')
 
         # add options
-        print(yml_dict)
         if 'options' in yml_dict:
             for opt_dict in yml_dict['options']:
                 for opt_key, opt_val in opt_dict.items():
