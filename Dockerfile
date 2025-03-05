@@ -21,4 +21,4 @@ RUN chmod 700 .ssh
 RUN cp templates/config.example.yml config/config.yml
 
 # run app
-CMD ["python", "-u", "main.py"]
+ENTRYPOINT ["python", "-u", "main.py"]
