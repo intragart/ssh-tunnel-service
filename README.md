@@ -48,8 +48,9 @@ in use can be turned off using this setting. Possible values are `True` or `Fals
 `user`: Mandatory. Username to be used at the remote site.
 
 `hostkey`: Optional. `known_hosts` entry of remote host. This key is needed to verify the identity
-of the remote system. If host key verification shall not be executed add
-`UserKnownHostsFile: /dev/null` and `StrictHostKeyChecking: no` to options list of yml file.
+of the remote system. The `Server host key` of a remote system can be printed by using `ssh -v ...`.
+If host key verification shall not be executed add `UserKnownHostsFile: /dev/null` and
+`StrictHostKeyChecking: no` to options list of yml file.
 
 `ssh-port`: Optional. Port to be used within the ssh-command.
 
@@ -66,7 +67,7 @@ keyfile musn't have a password. **If key is not set key `password` is mandatory.
 `remote-ports`: Optional. List of remote sockets to be forwarded with the tunnel. Format is
 `bind_address:localport:ip:remoteport`.
 
-`options`: Optional. *WIP*. List of ssh-command options.
+`options`: Optional. List of ssh options that will be added to the ssh command with the `-o` option.
 
 ## Adding a Service to Linux
 
@@ -124,7 +125,7 @@ simply be mounted as well:
 
     docker run -dt \
     -v /local/path/to/siteconfig.yml:/app/config/siteconfig.yml:ro \
-    -v /local/path/to/identity-file:/app/.ssh/identity-file:ro \
+    -v /local/path/to/identity-file:/app/.ssh/identity-file \
     ssh-tunnel-service
 
 ### Run Container using environment variables
@@ -145,7 +146,7 @@ same as described in [config/siteconfig.yml](#configsiteconfigyml). The only dif
 A command using environment variables could look like this:
 
     docker run -dt \
-    -v /local/path/to/identity-file:/app/.ssh/identity-file:ro \
+    -v /local/path/to/identity-file:/app/.ssh/identity-file \
     -e FQDN=example.com \
     -e SSH_PORT=22 \
     -e USER=test \
@@ -167,7 +168,7 @@ A working docker compose file using environment variables could look like this:
         image: ssh-tunnel-service
         restart: unless-stopped
         volumes:
-          - /local/path/to/identity-file:/app/.ssh/identity-file:ro
+          - /local/path/to/identity-file:/app/.ssh/identity-file
         environment:
           - FQDN=example.com
           - SSH_PORT=22
