@@ -17,4 +17,4 @@ RUN chmod 700 .ssh
 
 COPY templates/config.example.yml config/config.yml
 
-CMD ["python", "main.py"]
+CMD ["python", "-u", "main.py"]
