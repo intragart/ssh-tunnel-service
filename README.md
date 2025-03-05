@@ -48,9 +48,8 @@ in use can be turned off using this setting. Possible values are `True` or `Fals
 `user`: Mandatory. Username to be used at the remote site.
 
 `hostkey`: Optional. `known_hosts` entry of remote host. This key is needed to verify the identity
-of the remote system. The `Server host key` of a remote system can be printed by using `ssh -v ...`.
-If host key verification shall not be executed add `UserKnownHostsFile: /dev/null` and
-`StrictHostKeyChecking: no` to options list of yml file.
+of the remote system. If host key verification shall not be executed add
+`UserKnownHostsFile: /dev/null` and `StrictHostKeyChecking: no` to options list of yml file.
 
 `ssh-port`: Optional. Port to be used within the ssh-command.
 
